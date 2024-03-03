@@ -1,0 +1,299 @@
+openapi: 3.1.0
+info:
+  version: "1"
+  title: "Freshzon products API"
+  description: "API documentation for the products project."
+  contact:
+    name: Shimu Ziasmin
+    email: shimu2621@gmail.com
+servers:
+  - description: Dev
+    url: "http://localhost:5000/api"
+tags:
+  - name: User
+    description: User Endpoints(public)
+  - name: Auth
+    description: Authentication Endpoints(public)
+  - name: Product
+    description: Product Endpoints(private)
+paths:
+  "/user/signup":
+    post:
+      description: create a new account
+      summary: Performing signup of user
+      tags: [User]
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Shimu Ziasmin
+                email:
+                  type: string
+                  format: email
+                  example: shimu2621@gmail.com
+                password:
+                  type: string
+                  format: password
+                  example: Shimu123
+              required: [name, email, password]
+    responses:
+      "201":
+        description: Signup successful
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                code:
+                  type: integer
+                  format: int32
+                  example: 201
+                message:
+                  type: string
+                  example: Signup successful
+                data:
+                  type: object
+                  properties:
+                    access_token:
+                      type: string
+                      example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjVlNDFlMjFkMjUzOTUxMzg3OTZiMjY5In0sImlhdCI6MTcwOTQ0ODk3NywiZXhwIjoxNzA5NDUyNTc3fQ.uVgFmBEIg_l1uuM_muLJczKzl7DE5e6pf6OzNFFtZmo"
+                links:
+                  type: object
+                  properties:
+                    self:
+                      type: string
+                      example: "/auth/signup"
+                    signin:
+                      type: string
+                      example: "/auth/signin"
+      "400":
+        $ref: "#/components/responses/400"
+      "500":
+        $ref: "#/components/responses/500"
+  "/auth/signin":
+    post:
+      description: Performing signin with user email and password 
+      summary: "Performing signin of user"
+      tags: [Auth]
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: shimu2621@gmail.com
+                password:
+                  type: string
+                  format: password
+                  example: Shimu123
+              required: [email, password]
+      responses:
+        "200":
+          description: Signin successul
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 200
+                  message:
+                    type: string
+                    example: Signin successful
+                  data:
+                    type: object
+                    properties:
+                      access_token:
+                        type: string
+                        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: "/auth/signin"
+        "400":
+          $ref: "#/components/responses/400"
+        "500":
+          $ref: "#/components/responses/500"
+components:
+  responses:
+    "500":
+      description: Server Error
+      content: 
+        "application/json":
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 500
+              message:
+                type: string
+                example: "Server Error"
+    "400":
+      description: Bad Request
+      content:
+        "application/json":
+          schema:
+            type: object
+            properties: 
+              code:
+                type: integer
+                format: int32
+                example: 400
+              message: 
+                type: string
+                example: "Bad request"
+  "/product/create":
+    post:
+      description: create a new product
+      summary: Creates a new product with details     
+      tags: [Product]
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                name:
+                  type: String
+                  example: "any"
+                prevPrice:
+                  type: Number
+                  example: "any"
+                currentPrice:
+                  type: Number
+                  example: "any"
+                discounts:
+                  type: Number
+                  example: "any"
+                stars:
+                  type: String
+                  example: "any"
+                type:
+                  type: String
+                  example: "any"
+                image:
+                  type: String
+                  example: "any"
+                description:
+                  type: String
+                  example: "any"
+      responses:
+        "200":
+          description: "Product created successfully"
+        "400":
+          description: "Please provide all required fields"
+        "404":
+          description: "Bad Request" 
+  "/products":
+    get:
+      tags: [Product]
+      summary: View all products
+      description: Show all product list
+      content:
+        "application/json":
+          schema:
+            type: object
+      responses:
+        "200":
+          description: "Get product successfully"
+        "404":
+          description: "Bad Request"
+  "/product/edit/:productid":
+    patch:
+      tags: [ Product ]
+      summary: Edit a product
+      description: Edit a product by its id
+      requestBody:
+        content:
+          "application/json":
+             schema:
+                type: object
+                properties:
+                  name:
+                    type: String
+                    example: "any"
+                  prevPrice:
+                    type: Number
+                    example: "any"
+                  currentPrice:
+                    type: Number
+                    example: "any"
+                  stars:
+                    type: String
+                    example: "any"
+                  discounts:
+                    type: String
+                    example: "any"
+                  type:
+                    type: String
+                    example: "any"
+                  image:
+                    type: String
+                    example: "any"
+                  description:
+                    type: String
+                    example: "any"
+      responses:
+        "200":
+          description: "Product edit successfully"
+        "404":
+          description: "Bad Request"
+        "500":
+          description: "Server Error"
+  "/product/delete/:productid":
+    delete: 
+      tags: [ Product ]
+      summary: Deletes a product
+      description: Deletes a product by its id
+      requestBody:
+        content:
+          "application/json":
+             schema:
+                type: object
+                properties:
+                  name:
+                    type: String
+                    example: "any"
+                  prevPrice:
+                    type: Number
+                    example: "any"
+                  currentPrice:
+                    type: Number
+                    example: "any"
+                  stars:
+                    type: String
+                    example: "any"
+                  discounts:
+                    type: String
+                    example: "any"
+                  type:
+                    type: String
+                    example: "any"
+                  image:
+                    type: String
+                    example: "any"
+                  description:
+                    type: String
+                    example: "any"
+      responses:
+        "200":
+          description: "Product delete successfully"
+        "404":
+          description: "Bad Request"
+        "500":
+          description: "Server Error"
+    
+        
