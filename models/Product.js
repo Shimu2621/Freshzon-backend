@@ -3,7 +3,9 @@ const mongoose = require("mongoose");
 const productSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        trim: true
+        //trim remove all empty spaces
     },
     prevPrice: {
         type: Number,
@@ -16,14 +18,17 @@ const productSchema = new mongoose.Schema({
     discount: {
         type: Number
     },
-    type: {
+    quantity: {
+        type: Number,
+        required: true
+    },
+    category: {
         type: String,
         required: true
     },
-    image: {
-        type: String,
-        required: true
-    },
+    // image: {
+    //     type: String
+    // },
     description: {
         type: String,
         required: true
@@ -37,5 +42,5 @@ module.exports = mongoose.model("product", productSchema);
 // currentPrice: 50.00,
 // stars: 4,
 // discount: "-27%",
-// type: "vegetable",
+// category: "vegetable",
 // image: "/images/all-products/veg2.png"

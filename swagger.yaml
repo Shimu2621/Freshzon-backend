@@ -155,49 +155,7 @@ components:
               message: 
                 type: string
                 example: "Bad request"
-  "/product/create":
-    post:
-      description: create a new product
-      summary: Creates a new product with details     
-      tags: [Product]
-      requestBody:
-        content:
-          "application/json":
-            schema:
-              type: object
-              properties:
-                name:
-                  type: String
-                  example: "any"
-                prevPrice:
-                  type: Number
-                  example: "any"
-                currentPrice:
-                  type: Number
-                  example: "any"
-                discounts:
-                  type: Number
-                  example: "any"
-                stars:
-                  type: String
-                  example: "any"
-                type:
-                  type: String
-                  example: "any"
-                image:
-                  type: String
-                  example: "any"
-                description:
-                  type: String
-                  example: "any"
-      responses:
-        "200":
-          description: "Product created successfully"
-        "400":
-          description: "Please provide all required fields"
-        "404":
-          description: "Bad Request" 
-  "/products":
+  "/product/getProducts":
     get:
       tags: [Product]
       summary: View all products
@@ -211,7 +169,67 @@ components:
           description: "Get product successfully"
         "404":
           description: "Bad Request"
-  "/product/edit/:productid":
+  "/product/create":
+    post:
+      description: create a new product
+      summary: Creates a new product with details     
+      tags: [Product]
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Organic Mushroom
+                prevPrice:
+                  type: Number
+                  example: 65.00
+                currentPrice:
+                  type: Number
+                  example: 50.00
+                quantity:
+                  type: Number
+                  example: 1
+                categeory:
+                  type: String
+                  example: vagetable
+                description:
+                  type: String
+                  example: "Mushrooms (70g) provides 15 calories, 2.2g of protein, and 0.2g of fat. Mushrooms are a good source of copper, B vitamins."
+      responses:
+        "201":
+          description: "Product created successfully"
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 201
+                  message:
+                    type: string
+                    example: Product create successful 
+                  data:
+                    type: object
+                    properties:
+                      access_token:
+                        type: string
+                        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjVlNDFlMjFkMjUzOTUxMzg3OTZiMjY5In0sImlhdCI6MTcwOTgzNzQ2NiwiZXhwIjoxNzA5ODQxMDY2fQ.Xo0xE-gaFmPKDCuAXSclmTEktVNRrLkFfGr815k9ulA"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: "/auth/product"      
+        "400":
+          $ref: "#/components/responses/400"
+        "500":
+          $ref: "#/components/responses/500"
+  "/product/edit/{productid}":
     patch:
       tags: [ Product ]
       summary: Edit a product
@@ -231,16 +249,10 @@ components:
                   currentPrice:
                     type: Number
                     example: "any"
-                  stars:
-                    type: String
-                    example: "any"
                   discounts:
                     type: String
                     example: "any"
-                  type:
-                    type: String
-                    example: "any"
-                  image:
+                  category:
                     type: String
                     example: "any"
                   description:
@@ -253,7 +265,7 @@ components:
           description: "Bad Request"
         "500":
           description: "Server Error"
-  "/product/delete/:productid":
+  "/product/delete/{productid}":
     delete: 
       tags: [ Product ]
       summary: Deletes a product
@@ -280,9 +292,6 @@ components:
                     type: String
                     example: "any"
                   type:
-                    type: String
-                    example: "any"
-                  image:
                     type: String
                     example: "any"
                   description:

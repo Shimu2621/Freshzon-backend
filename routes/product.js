@@ -11,21 +11,28 @@ const auth = require("../middlewares/auth");
 
 router.post("/create", auth, async(req, res) => {
     try {
-        const { name, prevPrice, currentPrice, type, image, description } = req.body;
+        const { name, prevPrice, currentPrice, category, quantity, description } = req.body;
+
+        if(!name || !prevPrice || !currentPrice || !category || !quantity|| !description){
+            return res.status(400).json({
+                message: 'Please provide all fields'
+            })
+        }
 
         //creating an instance
         const product = new Product({
             name,
             prevPrice,
             currentPrice,
-            type,
-            image,
+            category,
+            quantity,
             description
         })
 
+        //using mongoose method to save product object
         await product.save();
         res.status(201).json({
-            product
+            message: 'Product created successfully', product
         })
     } catch (error) {
         console.log(error.message);
@@ -41,9 +48,9 @@ router.post("/create", auth, async(req, res) => {
  * @access public
  */
 
-router.get('/getProducts', auth, async(req, res) => {
+router.get('/getProducts', async(req, res) => {
     try {
-        const products = await product.find();
+        const products = await products.find();
 
         if(products.length > 0) {
             return res.status(200).json({
@@ -71,7 +78,7 @@ router.get('/getProducts', auth, async(req, res) => {
 router.patch("/edit/:productid", auth, async(req, res) => {
     const productId = req.params.productid;
     
-    const { name, prevPrice, currentPrice, stars, discounts, type, image, description } = req.body;
+    const { name, prevPrice, currentPrice, category, quantity, description } = req.body;
 
     try {
       const product = await Product.findById(productId);
@@ -79,6 +86,10 @@ router.patch("/edit/:productid", auth, async(req, res) => {
         return res.status(404).json({
             message: 'Product not found'
         })
+      }
+
+      if(name) {
+        product.name = name;
       }
       
       if(prevPrice) {
@@ -89,21 +100,17 @@ router.patch("/edit/:productid", auth, async(req, res) => {
         product.currentPrice = currentPrice;
       }
 
-      if(discounts) {
-        product.discounts = discounts;
+      if(quantity) {
+        product.quantity = quantity;
       }
 
-      if(stars) {
-        product.stars = stars;
+      if(category) {
+        product.category = category;
       }
 
-      if(type) {
-        product.type = type;
-      }
-
-      if(image) {
-        product.image = image;
-      }
+    //   if(image) {
+    //     product.image = image;
+    //   }
 
       if(description) {
         product.description = description;
@@ -112,7 +119,7 @@ router.patch("/edit/:productid", auth, async(req, res) => {
       await product.save();
 
       res.status(200).json({
-        message: 'Product updated successfully'
+        message: 'Product edited successfully'
       })
     } catch (error) {
         console.log(error.message)

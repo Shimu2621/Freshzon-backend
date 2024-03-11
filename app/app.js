@@ -33,7 +33,7 @@ const app = express();
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 
-const openapiSpecifications = swaggerJsdoc(swaggerOptions)
+const openapiSpecifications = swaggerJsdoc(swaggerOptions);
 
 connectDB()
 
